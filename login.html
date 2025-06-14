@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión</title>
+  <style>
+    body {
+      background: linear-gradient(160deg, #001c54 30%, #000000 73%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #FFFFFF;
+    }
+
+    .login-container {
+      background-color: #2E2E2E;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #4FC3F7;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background-color: #1F1F1F;
+      color: #FFFFFF;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #005C99;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #007ACC;
+    }
+
+    #mensajeError {
+      margin-top: 1rem;
+      color: #FF4C4C;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Iniciar Sesión</h1>
+    <form id="loginForm">
+      <label for="usuario">Usuario:</label>
+      <input type="text" id="usuario" required autocomplete="off">
+
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" required autocomplete="off">
+
+      <button type="submit">Ingresar</button>
+      <p id="mensajeError"></p>
+    </form>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const mensajeError = document.getElementById('mensajeError');
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const usuario = document.getElementById('usuario').value.trim().toLowerCase();
+      const contrasena = document.getElementById('contrasena').value.trim();
+
+      if (usuario === 'admin' && contrasena === 'admin') {
+        localStorage.setItem('rol', 'admin');
+        window.location.href = 'menuadmin.html';
+      } else if (usuario === 'empleado' && contrasena === 'empleado') {
+        localStorage.setItem('rol', 'empleado');
+        window.location.href = 'menu.html';
+      } else {
+        mensajeError.textContent = 'Usuario o contraseña incorrectos.';
+      }
+    });
+  </script>
+</body>
+</html>

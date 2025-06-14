@@ -1,0 +1,409 @@
+body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #001c54 0%, #000000 73%);
+      color: #F5F5F5;
+    }
+
+    #navbar {
+      background-color: #005C99;
+      color: white;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    #container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    #sidebar {
+      width: 220px;
+      background-color: #1a1a1a;
+      padding: 1rem;
+    }
+
+    #sidebar nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #sidebar nav ul li {
+      margin: 1rem 0;
+    }
+
+    #sidebar nav ul li a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      display: block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+    }
+
+    #sidebar nav ul li a:hover,
+    #sidebar nav ul li a.active {
+      background-color: #007acc;
+      color: white;
+    }
+
+    #main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    h1, h2 {
+      color: #4FC3F7;
+    }
+
+    form {
+      background-color: #2C2C2C;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      max-width: 600px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+    }
+
+    form button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #1E1E1E;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background-color: #03A9F4;
+    }
+
+    #mensaje {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    #buscador {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    #buscador input {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+    }
+
+    #buscador button {
+      padding: 0.5rem 1rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #1E1E1E;
+      font-weight: bold;
+    }
+
+    #buscador button:hover {
+      background-color: #03A9F4;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table th, table td {
+      border: 1px solid #444;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #333;
+      color: #4FC3F7;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #2A2A2A;
+    }
+
+    table tr.destacado {
+      background-color: #FF9900;
+      color: black;
+    }
+
+    #filtros {
+      margin-bottom: 1rem;
+      max-width: 480px;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    #filtroEtiqueta {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 6px;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+      border: 1px solid #444;
+    }
+
+    #filtros button {
+      padding: 0.5rem 1rem;
+      background-color: #005C99;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #filtros button:hover {
+      background-color: #007acc;
+    }
+
+    header {
+  background-color: #003366;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #4FC3F7;
+}
+
+header p {
+  margin: 0.5rem 0 0;
+  font-size: 1.2rem;
+  color: #BBB;
+}
+
+#userBar {
+  background-color: #1F1F1F;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+#userBar span {
+  font-weight: bold;
+  color: #4FC3F7;
+}
+
+#userBar button {
+  padding: 0.5rem 1rem;
+  background-color: #FF5252;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#userBar button:hover {
+  background-color: #E53935;
+}
+
+#menuNav {
+  background-color: #2C2C2C;
+  padding: 1rem 0;
+  border-bottom: 1px solid #444;
+}
+
+#menuNav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+#menuNav li {
+  margin: 0 1rem;
+}
+
+#menuNav a {
+  color: #F5F5F5;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+#menuNav a:hover,
+#menuNav a.active {
+  background-color: #4FC3F7;
+  color: #1F1F1F;
+}
+
+#contenido {
+  max-width: 480px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #2E2E2E;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  border: 3px solid #4FC3F7;
+}
+
+.info p {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  color: #DDD;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  background-color: #4FC3F7;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1E1E1E;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #03A9F4;
+}
+
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Fondo oscuro semi-transparente */
+#modalEditar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Contenedor del contenido del modal */
+#modalEditar > div {
+  background-color: #2C2C2C; /* mismo fondo que los formularios */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.8);
+  max-width: 500px;
+  width: 90%;
+  color: #F5F5F5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+/* Inputs y selects dentro del modal */
+#modalEditar input,
+#modalEditar select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #1F1F1F;
+  color: #F5F5F5;
+  font-size: 1rem;
+}
+
+/* Botones en el modal */
+#modalEditar button {
+  background-color: #4FC3F7;
+  color: #1E1E1E;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+#modalEditar button:hover {
+  background-color: #03A9F4;
+}
+.btn-eliminar {
+  background-color: #ff0404;
+  color: #1E1E1E;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+.btn-eliminar:hover {
+  background-color: #c62828;
+}
+
+/* Botón para cerrar modal */
+#modalEditar .cerrarModal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #4FC3F7;
+  cursor: pointer;
+}
+
+#modalEditar .cerrarModal:hover {
+  color: #03A9F4;
+}

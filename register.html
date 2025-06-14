@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - Maestranzas Unidos S.A.</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1E1E1E;
+      color: #F5F5F5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .registro-container {
+      background-color: #2C2C2C;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4FC3F7;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.6rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #1E1E1E;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #03A9F4;
+    }
+
+    #mensaje {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="registro-container">
+    <h1>Registro de Usuario</h1>
+    <form id="registroForm">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="usuario">Usuario:</label>
+      <input type="text" id="usuario" required>
+
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" required>
+
+      <label for="confirmar">Confirmar contraseña:</label>
+      <input type="password" id="confirmar" required>
+
+      <label for="rol">Rol:</label>
+      <select id="rol" required>
+        <option value="">Seleccionar rol</option>
+        <option value="usuario">Usuario</option>
+        <option value="admin">Administrador</option>
+      </select>
+
+      <button type="submit">Registrarse</button>
+      <p id="mensaje"></p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('registroForm');
+    const mensaje = document.getElementById('mensaje');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const usuario = document.getElementById('usuario').value.trim();
+      const contrasena = document.getElementById('contrasena').value;
+      const confirmar = document.getElementById('confirmar').value;
+      const rol = document.getElementById('rol').value;
+
+      if (!nombre || !usuario || !contrasena || !confirmar || !rol) {
+        mensaje.style.color = 'red';
+        mensaje.textContent = 'Todos los campos son obligatorios.';
+        return;
+      }
+
+      if (contrasena !== confirmar) {
+        mensaje.style.color = 'red';
+        mensaje.textContent = 'Las contraseñas no coinciden.';
+        return;
+      }
+
+      // Validación superada
+      mensaje.style.color = 'green';
+      mensaje.textContent = 'Registro exitoso. Redirigiendo...';
+
+      setTimeout(() => {
+        window.location.href = 'menu.html';
+      }, 1500);
+    });
+  </script>
+
+</body>
+</html>

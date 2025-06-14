@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil de Usuario - Maestranzas Unidos S.A.</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  
+</head>
+<body>
+
+  <header>
+    <h1>Maestranzas Unidos S.A.</h1>
+  </header>
+
+  <div id="userBar">
+    <span id="nombreUsuario">Usuario: ---</span>
+    <button id="btnLogout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+
+  <nav id="menuNav">
+    <ul>
+        <li><a href="menu.html" >Inicio</a></li>
+      <li><a href="reportesemp.html">Reportes</a></li>
+      <li><a href="configuracionemp.html">Configuración</a></li>
+      <li><a href="perfil.html" class="active">Perfil</a></li>
+      <!-- <li><a href="soporte.html">Soporte</a></li> -->
+    </ul>
+  </nav>
+
+  <div id="contenido">
+    <div class="info">
+      <p><strong>Nombre:</strong> <span id="nombreCompleto">---</span></p>
+      <p><strong>Correo:</strong> <span id="correo">---</span></p>
+      <p><strong>Rol:</strong> <span id="rol">---</span></p>
+    </div>
+  </div>
+
+
+  <script>
+    function cerrarSesion() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    window.addEventListener('load', () => {
+      const nombre = localStorage.getItem('nombre') || 'Empleado';
+      const correo = localStorage.getItem('correo') || 'correoempleado@gmail.com';
+      const rol = localStorage.getItem('rol') || 'empleado';
+
+      document.getElementById('nombreUsuario').textContent = `Usuario: ${nombre}`;
+      document.getElementById('nombreCompleto').textContent = nombre;
+      document.getElementById('correo').textContent = correo;
+      document.getElementById('rol').textContent = rol.charAt(0).toUpperCase() + rol.slice(1);
+    });
+  </script>
+
+</body>
+</html>

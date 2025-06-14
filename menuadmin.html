@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú Administrador - Maestranzas Unidos S.A.</title>
+  <style>
+    body {
+      background: linear-gradient(160deg, #001c54 30%, #000000 73%);
+      color: #FFFFFF;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1rem;
+      background-color: #2A2A2A;
+      border-bottom: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #4FC3F7;
+    }
+
+    #logoutBtn {
+      background-color: #FF4C4C;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #logoutBtn:hover {
+      background-color: #CC0000;
+    }
+
+    nav {
+      background-color: #2E2E2E;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      border-bottom: 1px solid #444;
+    }
+
+    nav a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      background-color: #005C99;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #007ACC;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      background-color: #2E2E2E;
+      border-radius: 10px;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    main h2 {
+      color: #4FC3F7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #1F1F1F;
+      border-top: 1px solid #444;
+      font-size: 0.9rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Maestranzas Unidos S.A. - Administrador</h1>
+    <button id="logoutBtn">Cerrar Sesión</button>
+  </header>
+
+  <nav>
+    <a href="menuadmin.html" class="active" >Inicio</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="movimientos.html">Movimientos</a>
+    <a href="reportes.html">Reportes</a>
+    <a href="configuracion.html">Configuración</a>
+  </nav>
+
+  <main>
+    <h2>Bienvenido, Administrador</h2>
+    <p>Selecciona una opción del menú para comenzar a gestionar el sistema.</p>
+  </main>
+
+  <footer>
+    &copy; 2025 Maestranzas Unidos S.A. - Todos los derechos reservados
+  </footer>
+
+  <script>
+    const rol = localStorage.getItem('rol');
+    if (rol !== 'admin') {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    });
+  </script>
+
+</body>
+</html>
