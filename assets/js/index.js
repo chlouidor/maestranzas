@@ -28,6 +28,7 @@ window.addEventListener('load', async () => {
 // Agregar pieza
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const pieza = {
     numeroSerie: document.getElementById('numeroSerie').value.trim(),
     descripcion: document.getElementById('descripcion').value.trim(),
@@ -42,7 +43,9 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  const { error } = await client.from('inventario').insert([pieza]);
+  // Insertar en la tabla de inventario
+  const { data, error } = await client.from('inventario').insert([pieza]).select();
+
   if (error) {
     mensaje.style.color = 'red';
     mensaje.textContent = 'Error al guardar: ' + error.message;
@@ -51,9 +54,25 @@ form.addEventListener('submit', async (e) => {
     mensaje.textContent = 'Pieza agregada con éxito.';
     form.reset();
     await cargarPiezas();
+
+    // Insertar en la tabla de registros_eliminados con acción "agregada"
+    const piezaInsertada = data[0]; 
+
+    const registro = {
+      id_producto: piezaInsertada.id || null,
+      descripcion: piezaInsertada.descripcion,
+      numero_serie: piezaInsertada.numeroSerie,
+      ubicacion: piezaInsertada.ubicacion,
+      etiqueta: piezaInsertada.etiqueta,
+      fecha_vencimiento: piezaInsertada.vencimiento,
+      fecha: new Date().toISOString(),
+      responsable: localStorage.getItem('rol') || 'desconocido',
+      accion: 'agregada'
+    };
+
+    await client.from('registros_eliminados').insert([registro]);
   }
 });
-
 // Botón de filtro
 botonFiltrar.addEventListener('click', filtrarPorEtiqueta);
 
@@ -89,7 +108,7 @@ function renderizarTabla(lista = piezas) {
       setTimeout(() => {
         tr.style.backgroundColor = '';
         idEditadoRecientemente = null;  
-      }, 2000);
+      }, 200);
     }
   });
   actualizarDropdownEtiquetas();
@@ -166,27 +185,71 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
   const nuevaEtiqueta = document.getElementById('editarEtiqueta').value.trim();
   const nuevoVencimiento = document.getElementById('editarVencimiento').value;
 
-  const { error } = await client
-    .from('inventario')
-    .update({
-      descripcion: nuevaDescripcion,
-      ubicacion: nuevaUbicacion,
-      etiqueta: nuevaEtiqueta,
-      vencimiento: nuevoVencimiento,
-    })
-    .eq('id', id);
+  try {
+    // 1. Obtener los datos actuales antes de actualizar
+    const { data: datosOriginales, error: errorConsulta } = await client
+      .from('inventario')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error) {
-    alert('Error al actualizar: ' + error.message);
-  } else {
-    alert('Pieza actualizada correctamente.');
+    if (errorConsulta || !datosOriginales) {
+      throw new Error('No se pudo obtener la pieza original.');
+    }
+
+    // 2. Obtener datos de usuario y rol desde localStorage
+    const rol = localStorage.getItem('rol') || 'Desconocido';
+    const responsable = `${rol}`;
+
+    // 3. Insertar en registros_eliminados como movimiento de tipo "editar"
+    const fechaActual = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
+    const registroEdicion = {
+      id_producto: datosOriginales.id,
+      descripcion: datosOriginales.descripcion,
+      numero_serie: datosOriginales.numeroSerie,
+      ubicacion: datosOriginales.ubicacion,
+      etiqueta: datosOriginales.etiqueta,
+      fecha_vencimiento: datosOriginales.vencimiento,
+      fecha: fechaActual,
+      responsable: responsable,
+      accion: 'editada'
+    };
+
+    const { error: errorHistorial } = await client
+      .from('registros_eliminados')
+      .insert([registroEdicion]);
+
+    if (errorHistorial) {
+      throw new Error('No se pudo guardar el historial de edición: ' + errorHistorial.message);
+    }
+
+    // 4. Actualizar la pieza
+    const { error } = await client
+      .from('inventario')
+      .update({
+        descripcion: nuevaDescripcion,
+        ubicacion: nuevaUbicacion,
+        etiqueta: nuevaEtiqueta,
+        vencimiento: nuevoVencimiento,
+      })
+      .eq('id', id);
+
+    if (error) {
+      throw new Error('Error al actualizar la pieza: ' + error.message);
+    }
+
+    alert('Pieza actualizada y registrada en historial de edición.');
     cerrarModal();
 
     idEditadoRecientemente = id;
-
     await cargarPiezas();
+
+  } catch (err) {
+    alert('Error: ' + err.message);
+    console.error(err);
   }
 });
+
 
 async function eliminarPieza(id) {
   const pieza = piezas.find(p => p.id === id);
@@ -202,11 +265,10 @@ async function eliminarPieza(id) {
     const fechaActual = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
 
     // Obtener usuario y rol desde localStorage
-    const usuario = localStorage.getItem('usuario') || 'Desconocido';
     const rol = localStorage.getItem('rol') || 'Desconocido';
 
-    // Componer responsable con usuario y rol
-    const responsable = `(${rol})`;
+    // Componer responsable
+    const responsable = `${rol}`;
 
     const piezaEliminada = {
       id_producto: pieza.id,
@@ -216,10 +278,11 @@ async function eliminarPieza(id) {
       etiqueta: pieza.etiqueta,
       fecha_vencimiento: pieza.vencimiento,
       fecha: fechaActual,
-      responsable: responsable
+      responsable: responsable,
+      accion: 'eliminada'  
     };
 
-    // Insertar en registros eliminados
+    // Insertar en registros_eliminados
     const { error: insertError } = await client
       .from('registros_eliminados')
       .insert([piezaEliminada]);

@@ -38,6 +38,7 @@
               <th>Fecha Vencimiento</th>
               <th>Fecha Eliminación</th>
               <th>Responsable</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody id="tablaMovimientos">
@@ -57,7 +58,7 @@
     async function cargarMovimientos() {
       const { data, error } = await client
         .from('registros_eliminados')
-        .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, fecha, responsable')
+        .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, fecha, responsable,accion')
         .order('fecha', { ascending: false });
 
       if (error) {
@@ -85,6 +86,8 @@
           <td>${new Date(mov.fecha_vencimiento).toLocaleDateString()}</td>
           <td>${new Date(mov.fecha).toLocaleDateString()}</td>
           <td>${mov.responsable}</td>
+          <td>${mov.accion || 'N/A'}</td>
+
         `;
         tbody.appendChild(tr);
       });
