@@ -92,11 +92,45 @@
       flex: 1;
       padding: 2rem;
       max-width: 800px;
-      margin: 2rem auto 2rem auto;
+      margin: 2rem auto;
       background-color: #2E2E2E;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       color: #DDD;
+    }
+
+    form label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+
+    form select,
+    form input[type="checkbox"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+    }
+
+    form button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 6px;
+      cursor: not-allowed;
+      color: #1E1E1E;
+      font-weight: bold;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+      color: #aaa;
     }
 
     footer {
@@ -123,13 +157,31 @@
 
   <nav id="menuNav">
     <ul>
-        <li><a href="menu.html" >Inicio</a></li>
+      <li><a href="menu.html">Inicio</a></li>
       <li><a href="reportesemp.html">Reportes</a></li>
       <li><a href="configuracion.html" class="active">Configuración</a></li>
       <li><a href="perfil.html">Perfil</a></li>
     </ul>
   </nav>
 
+  <main id="contenido">
+    <h2>Preferencias del Usuario</h2>
+    <form>
+      <label for="idioma">Idioma de la Interfaz:</label>
+      <select id="idioma" disabled>
+        <option value="es">Español</option>
+        <option value="en">Inglés</option>
+        <option value="fr">Francés</option>
+      </select>
+      <small>(Sin funcionalidad activa por ahora)</small>
+
+      <label for="modoOscuro">Modo Oscuro:</label>
+      <input type="checkbox" id="modoOscuro" disabled />
+      <small>(Sin funcionalidad activa por ahora)</small>
+
+      <button type="button" disabled>Guardar Cambios</button>
+    </form>
+  </main>
 
   <footer>
     &copy; 2025 Maestranzas Unidos S.A. - Todos los derechos reservados
@@ -140,17 +192,6 @@
       localStorage.clear();
       window.location.href = 'login.html';
     }
-
-    window.addEventListener('load', () => {
-      const rol = localStorage.getItem('rol');
-      if (!rol) {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      const nombreUsuario = rol === 'admin' ? 'Administrador' : 'Empleado';
-      document.getElementById('nombreUsuario').textContent = `Usuario: ${nombreUsuario}`;
-    });
   </script>
 
 </body>

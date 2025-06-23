@@ -89,26 +89,8 @@
     </form>
   </div>
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const mensajeError = document.getElementById('mensajeError');
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+<script src="assets/js/login.js"></script>
 
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const usuario = document.getElementById('usuario').value.trim().toLowerCase();
-      const contrasena = document.getElementById('contrasena').value.trim();
-
-      if (usuario === 'admin' && contrasena === 'admin') {
-        localStorage.setItem('rol', 'admin');
-        window.location.href = 'menuadmin.html';
-      } else if (usuario === 'empleado' && contrasena === 'empleado') {
-        localStorage.setItem('rol', 'empleado');
-        window.location.href = 'menu.html';
-      } else {
-        mensajeError.textContent = 'Usuario o contraseña incorrectos.';
-      }
-    });
-  </script>
 </body>
 </html>

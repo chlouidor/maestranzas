@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Perfil de Usuario - Maestranzas Unidos S.A.</title>
   <link rel="stylesheet" href="./assets/css/style.css">
-  
+
 </head>
 <body>
 
@@ -20,7 +20,7 @@
 
   <nav id="menuNav">
     <ul>
-        <li><a href="menu.html" >Inicio</a></li>
+      <li><a href="menu.html" >Inicio</a></li>
       <li><a href="reportesemp.html">Reportes</a></li>
       <li><a href="configuracionemp.html">Configuración</a></li>
       <li><a href="perfil.html" class="active">Perfil</a></li>
@@ -30,30 +30,17 @@
 
   <div id="contenido">
     <div class="info">
+      <!-- Imagen de perfil según rol -->
+      <img id="fotoPerfil" src="" alt="Foto de perfil" />
+
       <p><strong>Nombre:</strong> <span id="nombreCompleto">---</span></p>
-      <p><strong>Correo:</strong> <span id="correo">---</span></p>
+      <!-- Correo removido -->
       <p><strong>Rol:</strong> <span id="rol">---</span></p>
     </div>
   </div>
 
-
-  <script>
-    function cerrarSesion() {
-      localStorage.clear();
-      window.location.href = 'login.html';
-    }
-
-    window.addEventListener('load', () => {
-      const nombre = localStorage.getItem('nombre') || 'Empleado';
-      const correo = localStorage.getItem('correo') || 'correoempleado@gmail.com';
-      const rol = localStorage.getItem('rol') || 'empleado';
-
-      document.getElementById('nombreUsuario').textContent = `Usuario: ${nombre}`;
-      document.getElementById('nombreCompleto').textContent = nombre;
-      document.getElementById('correo').textContent = correo;
-      document.getElementById('rol').textContent = rol.charAt(0).toUpperCase() + rol.slice(1);
-    });
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+  <script src="assets/js/perfil.js"></script>
 
 </body>
 </html>

@@ -9,6 +9,7 @@ const tabla = document.getElementById('tablaPiezas');
 const filtroEtiqueta = document.getElementById('filtroEtiqueta');
 const botonFiltrar = document.getElementById('botonFiltrar');
 
+
 const piezas = [];
 
 let idEditadoRecientemente = null; // Variable para resaltar fila editada
@@ -32,7 +33,7 @@ form.addEventListener('submit', async (e) => {
   const pieza = {
     numeroSerie: document.getElementById('numeroSerie').value.trim(),
     descripcion: document.getElementById('descripcion').value.trim(),
-    ubicacion: document.getElementById('ubicacion').value.trim(),
+    ubicacion: document.getElementById('ubicacion').value,
     etiqueta: document.getElementById('etiqueta').value.trim(),
     vencimiento: document.getElementById('vencimiento').value,
   };
@@ -181,7 +182,7 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
 
   const id = Number(document.getElementById('editarId').value);
   const nuevaDescripcion = document.getElementById('editarDescripcion').value.trim();
-  const nuevaUbicacion = document.getElementById('editarUbicacion').value.trim();
+  const nuevaUbicacion = document.getElementById('editarUbicacion').value;
   const nuevaEtiqueta = document.getElementById('editarEtiqueta').value.trim();
   const nuevoVencimiento = document.getElementById('editarVencimiento').value;
 
@@ -309,6 +310,10 @@ async function eliminarPieza(id) {
     console.error(error);
   }
 }
+
+
+
+
 
 
 
