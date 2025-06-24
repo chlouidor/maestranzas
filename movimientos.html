@@ -29,19 +29,21 @@
       <p id="mensaje"></p>
       <div class="tabla-wrapper">
         <table>
-          <thead>
-            <tr>
-              <th>ID Producto</th>
-              <th>Descripción</th>
-              <th>Número de Serie</th>
-              <th>Ubicación</th>
-              <th>Etiqueta</th>
-              <th>Fecha Vencimiento</th>
-              <th>Fecha Modificación</th>
-              <th>Responsable</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
+    <thead>
+      <tr>
+        <th>ID Producto</th>
+        <th>Descripción</th>
+        <th>Número de Serie</th>
+        <th>Ubicación</th>
+        <th>Etiqueta</th>
+        <th>Fecha Vencimiento</th>
+        <th>Cantidad</th> 
+        <th>Fecha Modificación</th>
+        <th>Responsable</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+
           <tbody id="tablaMovimientos">
             <!-- Se llenará dinámicamente -->
           </tbody>
@@ -57,42 +59,43 @@
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function cargarMovimientos() {
-      const { data, error } = await client
-        .from('registros_eliminados')
-        .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, fecha, responsable,accion')
-        .order('fecha', { ascending: false });
+  const { data, error } = await client
+    .from('registros_eliminados')
+    .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, cantidad, fecha, responsable, accion')
+    .order('fecha', { ascending: false });
 
-      if (error) {
-        console.error('Error al cargar movimientos:', error);
-        document.getElementById('mensaje').textContent = 'No se pudo cargar el historial.';
-        return;
-      }
+  if (error) {
+    console.error('Error al cargar movimientos:', error);
+    document.getElementById('mensaje').textContent = 'No se pudo cargar el historial.';
+    return;
+  }
 
-      const tbody = document.getElementById('tablaMovimientos');
-      tbody.innerHTML = ''; // Limpiar tabla
+  const tbody = document.getElementById('tablaMovimientos');
+  tbody.innerHTML = '';
 
-      if (data.length === 0) {
-        document.getElementById('mensaje').textContent = 'No hay movimientos registrados.';
-        return;
-      }
+  if (data.length === 0) {
+    document.getElementById('mensaje').textContent = 'No hay movimientos registrados.';
+    return;
+  }
 
-      data.forEach(mov => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${mov["id_producto"]}</td>
-          <td>${mov.descripcion}</td>
-          <td>${mov.numero_serie}</td>
-          <td>${mov.ubicacion}</td>
-          <td>${mov.etiqueta}</td>
-          <td>${new Date(mov.fecha_vencimiento).toLocaleDateString()}</td>
-          <td>${new Date(mov.fecha).toLocaleDateString()}</td>
-          <td>${mov.responsable}</td>
-          <td>${mov.accion || 'N/A'}</td>
+  data.forEach(mov => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${mov["id_producto"]}</td>
+      <td>${mov.descripcion}</td>
+      <td>${mov.numero_serie}</td>
+      <td>${mov.ubicacion}</td>
+      <td>${mov.etiqueta}</td>
+      <td>${new Date(mov.fecha_vencimiento).toLocaleDateString()}</td>
+      <td>${mov.cantidad ?? '-'}</td>
+      <td>${new Date(mov.fecha).toLocaleDateString()}</td>
+      <td>${mov.responsable}</td>
+      <td>${mov.accion || 'N/A'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
 
-        `;
-        tbody.appendChild(tr);
-      });
-    }
 
     document.addEventListener('DOMContentLoaded', cargarMovimientos);
   </script>

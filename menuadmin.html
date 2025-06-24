@@ -107,11 +107,17 @@
     <a href="reportes.html">Reportes</a>
     <a href="configuracion.html">Configuración</a>
     <a href="register.html" >Registrar Usuario</a>
+    <a href="gestion.html" >Asignar Piezas</a>
   </nav>
 
   <main>
     <h2>Bienvenido, Administrador</h2>
     <p>Selecciona una opción del menú para comenzar a gestionar el sistema.</p>
+    <div id="notificacionStockBajo" style="display:none; background-color:#ffcc00; color:#333; padding:10px; border-radius:5px; margin-top:1rem; font-weight:bold;">
+  ⚠️ Hay piezas con stock bajo o por vencer. Por favor revisa el inventario.
+  <div id="reportesContenido" style="margin-top:10px; color:#000;"></div>
+</div>
+
   </main>
 
   <footer>
@@ -129,6 +135,7 @@
       window.location.href = 'login.html';
     });
   </script>
-
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script> 
+<script src="./assets/js/reportes.js"></script>
 </body>
 </html>

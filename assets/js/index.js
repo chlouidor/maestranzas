@@ -9,14 +9,15 @@ const tabla = document.getElementById('tablaPiezas');
 const filtroEtiqueta = document.getElementById('filtroEtiqueta');
 const botonFiltrar = document.getElementById('botonFiltrar');
 
-
 const piezas = [];
 
-let idEditadoRecientemente = null; // Variable para resaltar fila editada
+let idEditadoRecientemente = null;
 
 // Cargar piezas al iniciar
 window.addEventListener('load', async () => {
   await cargarPiezas();
+  mostrarNotificaciones();  
+
   const ultimo = localStorage.getItem('ultimoFiltro');
   if (ultimo) {
     filtroEtiqueta.value = ultimo;
@@ -26,25 +27,26 @@ window.addEventListener('load', async () => {
   }
 });
 
+
 // Agregar pieza
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const pieza = {
-    numeroSerie: document.getElementById('numeroSerie').value.trim(),
-    descripcion: document.getElementById('descripcion').value.trim(),
-    ubicacion: document.getElementById('ubicacion').value,
-    etiqueta: document.getElementById('etiqueta').value.trim(),
-    vencimiento: document.getElementById('vencimiento').value,
-  };
+const pieza = {
+  numeroSerie: document.getElementById('numeroSerie').value.trim(),
+  descripcion: document.getElementById('descripcion').value.trim(),
+  ubicacion: document.getElementById('ubicacion').value,
+  etiqueta: document.getElementById('etiqueta').value.trim(),
+  vencimiento: document.getElementById('vencimiento').value,
+  cantidad: parseInt(document.getElementById('cantidad').value),
+  stockmin: 5   
+};
 
   if (new Date(pieza.vencimiento) < new Date().setHours(0, 0, 0, 0)) {
     mensaje.style.color = 'red';
     mensaje.textContent = 'No se puede registrar un producto vencido.';
     return;
   }
-
-  // Insertar en la tabla de inventario
   const { data, error } = await client.from('inventario').insert([pieza]).select();
 
   if (error) {
@@ -56,9 +58,7 @@ form.addEventListener('submit', async (e) => {
     form.reset();
     await cargarPiezas();
 
-    // Insertar en la tabla de registros_eliminados con acción "agregada"
-    const piezaInsertada = data[0]; 
-
+    const piezaInsertada = data[0];
     const registro = {
       id_producto: piezaInsertada.id || null,
       descripcion: piezaInsertada.descripcion,
@@ -66,14 +66,16 @@ form.addEventListener('submit', async (e) => {
       ubicacion: piezaInsertada.ubicacion,
       etiqueta: piezaInsertada.etiqueta,
       fecha_vencimiento: piezaInsertada.vencimiento,
+      cantidad: piezaInsertada.cantidad,
       fecha: new Date().toISOString(),
-      responsable: localStorage.getItem('rol') || 'desconocido',
+      responsable: localStorage.getItem('nombreUsuario') || 'Desconocido',
       accion: 'agregada'
     };
 
     await client.from('registros_eliminados').insert([registro]);
   }
 });
+
 // Botón de filtro
 botonFiltrar.addEventListener('click', filtrarPorEtiqueta);
 
@@ -88,11 +90,13 @@ function renderizarTabla(lista = piezas) {
     if (dias <= 30) tr.classList.add('destacado');
 
     tr.innerHTML = `
+      <td>${pieza.id}</td>
       <td>${pieza.numeroSerie}</td>
       <td>${pieza.descripcion}</td>
       <td>${pieza.ubicacion}</td>
       <td>${pieza.etiqueta}</td>
       <td>${new Date(pieza.vencimiento).toLocaleDateString()}</td>
+      <td>${pieza.cantidad}</td>
       <td>
         <button onclick="verDetalle(${pieza.id})">Ver</button>
         <button onclick="abrirModalEditar(${pieza.id})">Editar</button>
@@ -104,11 +108,10 @@ function renderizarTabla(lista = piezas) {
 
     if (pieza.id === idEditadoRecientemente) {
       tr.style.transition = 'background-color 0.5s ease';
-      tr.style.backgroundColor = '#9b9b9b'; 
-
+      tr.style.backgroundColor = '#9b9b9b';
       setTimeout(() => {
         tr.style.backgroundColor = '';
-        idEditadoRecientemente = null;  
+        idEditadoRecientemente = null;
       }, 200);
     }
   });
@@ -118,11 +121,10 @@ function renderizarTabla(lista = piezas) {
 function verDetalle(id) {
   const pieza = piezas.find(p => p.id === id);
   if (pieza) {
-    alert(`Detalles:\nSerie: ${pieza.numeroSerie}\nDescripción: ${pieza.descripcion}\nUbicación: ${pieza.ubicacion}\nEtiqueta: ${pieza.etiqueta}\nVence: ${new Date(pieza.vencimiento).toLocaleDateString()}`);
+    alert(`Detalles:\nID: ${pieza.id}\nSerie: ${pieza.numeroSerie}\nDescripción: ${pieza.descripcion}\nUbicación: ${pieza.ubicacion}\nEtiqueta: ${pieza.etiqueta}\nVence: ${new Date(pieza.vencimiento).toLocaleDateString()}\nCantidad: ${pieza.cantidad}`);
   }
 }
 
-// Filtro
 function filtrarPorEtiqueta() {
   const etiquetaSeleccionada = filtroEtiqueta.value;
   const filtradas = etiquetaSeleccionada ? piezas.filter(p => p.etiqueta === etiquetaSeleccionada) : piezas;
@@ -130,7 +132,6 @@ function filtrarPorEtiqueta() {
   localStorage.setItem('ultimoFiltro', etiquetaSeleccionada);
 }
 
-// Dropdown dinámico
 function actualizarDropdownEtiquetas() {
   const etiquetas = [...new Set(piezas.map(p => p.etiqueta))];
   const seleccionActual = filtroEtiqueta.value;
@@ -144,7 +145,6 @@ function actualizarDropdownEtiquetas() {
   if (seleccionActual) filtroEtiqueta.value = seleccionActual;
 }
 
-// Cargar desde Supabase
 async function cargarPiezas() {
   const { data, error } = await client.from('inventario').select('*');
   if (data) {
@@ -157,21 +157,20 @@ async function cargarPiezas() {
   }
 }
 
-// Abrir modal para editar
 function abrirModalEditar(id) {
   const pieza = piezas.find(p => p.id === id);
   if (!pieza) return;
 
-  document.getElementById('editarId').value = pieza.id;               
-  document.getElementById('editarSerie').value = pieza.numeroSerie;   
+  document.getElementById('editarId').value = pieza.id;
+  document.getElementById('editarSerie').value = pieza.numeroSerie;
   document.getElementById('editarDescripcion').value = pieza.descripcion;
   document.getElementById('editarUbicacion').value = pieza.ubicacion;
   document.getElementById('editarEtiqueta').value = pieza.etiqueta;
   document.getElementById('editarVencimiento').value = pieza.vencimiento.split('T')[0];
+  document.getElementById('editarCantidad').value = pieza.cantidad;
 
   document.getElementById('modalEditar').style.display = 'flex';
 }
-
 
 function cerrarModal() {
   document.getElementById('modalEditar').style.display = 'none';
@@ -185,9 +184,9 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
   const nuevaUbicacion = document.getElementById('editarUbicacion').value;
   const nuevaEtiqueta = document.getElementById('editarEtiqueta').value.trim();
   const nuevoVencimiento = document.getElementById('editarVencimiento').value;
+  const nuevaCantidad = parseInt(document.getElementById('editarCantidad').value);
 
   try {
-    // 1. Obtener los datos actuales antes de actualizar
     const { data: datosOriginales, error: errorConsulta } = await client
       .from('inventario')
       .select('*')
@@ -198,12 +197,7 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
       throw new Error('No se pudo obtener la pieza original.');
     }
 
-    // 2. Obtener datos de usuario y rol desde localStorage
-    const rol = localStorage.getItem('rol') || 'Desconocido';
-    const responsable = `${rol}`;
-
-    // 3. Insertar en registros_eliminados como movimiento de tipo "editar"
-    const fechaActual = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
+    const responsable = localStorage.getItem('nombreUsuario') || 'Desconocido';
     const registroEdicion = {
       id_producto: datosOriginales.id,
       descripcion: datosOriginales.descripcion,
@@ -211,7 +205,8 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
       ubicacion: datosOriginales.ubicacion,
       etiqueta: datosOriginales.etiqueta,
       fecha_vencimiento: datosOriginales.vencimiento,
-      fecha: fechaActual,
+      cantidad: datosOriginales.cantidad,
+      fecha: new Date().toISOString().split('T')[0],
       responsable: responsable,
       accion: 'editada'
     };
@@ -224,7 +219,6 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
       throw new Error('No se pudo guardar el historial de edición: ' + errorHistorial.message);
     }
 
-    // 4. Actualizar la pieza
     const { error } = await client
       .from('inventario')
       .update({
@@ -232,6 +226,8 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
         ubicacion: nuevaUbicacion,
         etiqueta: nuevaEtiqueta,
         vencimiento: nuevoVencimiento,
+        cantidad: nuevaCantidad,
+        stockmin: 5
       })
       .eq('id', id);
 
@@ -241,7 +237,6 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
 
     alert('Pieza actualizada y registrada en historial de edición.');
     cerrarModal();
-
     idEditadoRecientemente = id;
     await cargarPiezas();
 
@@ -250,7 +245,6 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
     console.error(err);
   }
 });
-
 
 async function eliminarPieza(id) {
   const pieza = piezas.find(p => p.id === id);
@@ -263,13 +257,8 @@ async function eliminarPieza(id) {
   if (!confirmar) return;
 
   try {
-    const fechaActual = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
-
-    // Obtener usuario y rol desde localStorage
-    const rol = localStorage.getItem('rol') || 'Desconocido';
-
-    // Componer responsable
-    const responsable = `${rol}`;
+    const fechaActual = new Date().toISOString().split('T')[0];
+    const responsable = localStorage.getItem('nombreUsuario') || 'Desconocido';
 
     const piezaEliminada = {
       id_producto: pieza.id,
@@ -278,12 +267,12 @@ async function eliminarPieza(id) {
       ubicacion: pieza.ubicacion,
       etiqueta: pieza.etiqueta,
       fecha_vencimiento: pieza.vencimiento,
+      cantidad: pieza.cantidad,
       fecha: fechaActual,
       responsable: responsable,
-      accion: 'eliminada'  
+      accion: 'eliminada'
     };
 
-    // Insertar en registros_eliminados
     const { error: insertError } = await client
       .from('registros_eliminados')
       .insert([piezaEliminada]);
@@ -292,7 +281,6 @@ async function eliminarPieza(id) {
       throw new Error("Error al guardar en registros_eliminados: " + insertError.message);
     }
 
-    // Eliminar del inventario
     const { error: deleteError } = await client
       .from('inventario')
       .delete()
@@ -311,9 +299,53 @@ async function eliminarPieza(id) {
   }
 }
 
+function mostrarNotificaciones() {
+  const main = document.querySelector('main');
+  
+  // Limpiar notificaciones previas
+  const prevNotifs = document.querySelectorAll('.notificacion-alerta');
+  prevNotifs.forEach(n => n.remove());
+  
+  const hoy = new Date();
+  const diasParaAviso = 30;
+  
+  const piezasBajoStock = piezas.filter(p => p.cantidad <= p.stockmin);
+  const piezasPorCaducar = piezas.filter(p => {
+    const diffDias = (new Date(p.vencimiento) - hoy) / (1000 * 60 * 60 * 24);
+    return diffDias > 0 && diffDias <= diasParaAviso;
+  });
 
+  // Crear contenedor de notificaciones si hay algo
+  if (piezasBajoStock.length === 0 && piezasPorCaducar.length === 0) {
+    return; // No hay notificaciones
+  }
 
+  const contenedor = document.createElement('div');
+  contenedor.classList.add('notificacion-alerta');
+  contenedor.style.backgroundColor = '#ff4444';
+  contenedor.style.padding = '1rem';
+  contenedor.style.borderRadius = '8px';
+  contenedor.style.marginBottom = '1rem';
+  contenedor.style.color = 'white';
+  contenedor.style.fontWeight = 'bold';
 
+  if (piezasBajoStock.length > 0) {
+    const listaStock = piezasBajoStock.map(p => `- ${p.descripcion} (Stock: ${p.cantidad})`).join('<br>');
+    const alertaStock = document.createElement('p');
+    alertaStock.innerHTML = `<strong>¡Atención! Stock bajo en los siguientes productos:</strong><br>${listaStock}`;
+    contenedor.appendChild(alertaStock);
+  }
 
+  if (piezasPorCaducar.length > 0) {
+    const listaVencimiento = piezasPorCaducar.map(p => {
+      const diasRestantes = Math.ceil((new Date(p.vencimiento) - hoy) / (1000 * 60 * 60 * 24));
+      return `- ${p.descripcion} (vence en ${diasRestantes} día(s))`;
+    }).join('<br>');
+    const alertaVencimiento = document.createElement('p');
+    alertaVencimiento.style.marginTop = '1rem';
+    alertaVencimiento.innerHTML = `<strong>¡Alerta! Los siguientes productos están por caducar:</strong><br>${listaVencimiento}`;
+    contenedor.appendChild(alertaVencimiento);
+  }
 
-
+  main.prepend(contenedor);
+}

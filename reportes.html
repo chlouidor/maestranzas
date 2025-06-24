@@ -9,6 +9,7 @@
 
 </head>
 
+
 <body>
      <header id="navbar">
     Reportes
@@ -24,22 +25,38 @@
           <li><a href="reportes.html" class="active">Reportes</a></li>
           <li><a href="configuracion.html">Configuración</a></li>
           <li><a href="register.html" >Registrar Usuario</a></li>
+          <li><a href="gestion.html" >Asignar Piezas</a></li>
         </ul>
       </nav>
     </aside>
 
   
-  <table>
-    <thead>
-      <tr>
-        <th>ID </th>
-        <th>Nombre</th>
-        <th>Descripcion</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+      <div id="stockMinimoContainer" style="display:none; margin-top: 2rem;">
+          <h2>Productos Bajo Stock Mínimo</h2>
+            <label>
+              <input type="checkbox" id="toggleStockMinimo" checked /> Mostrar solo productos bajo stock mínimo
+            </label>
+          <table id="tablaStockMinimo" border="1"  margin-top: 1rem;">
+             <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Stock Mínimo</th>
+                <th>Alerta</th>
+              </tr>
+             </thead>
+                <tbody>
+      
+                </tbody>
+          </table>
+      </div>
+
   </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script>
+  <script src="./assets/js/reportes.js"></script>
 </body>
 </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asignación de Piezas - Maestranzas Unidos S.A.</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+
+<body>
+  <header id="navbar">
+    Maestranzas Unidos S.A. - Asignación de Piezas
+  </header>
+
+  <div id="container" style="display:flex;">
+    <aside id="sidebar" style="width:200px;">
+      <nav>
+        <ul>
+          <li><a href="menuadmin.html" >Inicio</a></li>
+          <li><a href="inventario.html">Inventario</a></li>
+          <li><a href="movimientos.html">Movimientos</a></li>
+          <li><a href="reportes.html">Reportes</a></li>
+          <li><a href="configuracion.html">Configuración</a></li>
+          <li><a href="register.html">Registrar Usuario</a></li>
+          <li><a href="gestion.html" class="active">Asignar Piezas</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main" style="flex-grow:1; padding:20px;">
+      <h1>Asignar Piezas a Proyecto/Lote</h1>
+
+      <form id="asignacionForm">
+        <label for="piezaSelect">Seleccione Pieza (Número de Serie):</label>
+        <select id="piezaSelect" required>
+          <option value="" disabled selected>-- Seleccione una pieza --</option>
+        </select>
+
+        <label for="cantidadAsignar">Cantidad a asignar:</label>
+        <input type="number" id="cantidadAsignar" min="1" value="1" required />
+
+        <label for="proyecto">Proyecto o Lote:</label>
+        <input type="text" id="proyecto" placeholder="Ingrese proyecto o lote" required />
+
+        <label for="fase">Fase o Etapa:</label>
+        <select id="fase" required>
+          <option value="" disabled selected>-- Seleccione fase --</option>
+          <option value="Recepción">Recepción</option>
+          <option value="Montaje">Montaje</option>
+          <option value="Pruebas">Pruebas</option>
+          <option value="Entrega">Entrega</option>
+        </select>
+
+        <button type="submit">Confirmar Asignación</button>
+        <button type="button" id="btnDeshacer">Deshacer Última Asignación</button>
+      </form>
+
+      <p id="mensajeAsignacion" style="color:red;"></p>
+
+      <h2>Asignaciones Actuales</h2>
+      <table id="tablaAsignaciones">
+        <thead>
+          <tr>
+            <th>Número de Serie</th>
+            <th>Descripción</th>
+            <th>Cantidad asignada</th>
+            <th>Proyecto/Lote</th>
+            <th>Fase/Etapa</th>
+            <th>Fecha asignación</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoAsignaciones"></tbody>
+      </table>
+
+    </main>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+<script src="assets/js/gestion.js"></script>
+</body>
+</html>

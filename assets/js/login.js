@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      // Consulta la tabla Usuario buscando usuario y contraseña
+      // Trae el campo Nombre además de Usuario, Contrasena, Rol
       const { data, error } = await client
         .from('Usuario')  // usa el nombre correcto de tu tabla
-        .select('Usuario, Contrasena, Rol')
+        .select('Usuario, Contrasena, Rol, Nombre')
         .eq('Usuario', usuario)
         .limit(1)
         .single();
@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Login correcto
-      // Guarda el rol en localStorage (1 = admin, 2 = usuario)
       const rol = data.Rol === 1 ? 'admin' : 'usuario';
       localStorage.setItem('rol', rol);
       localStorage.setItem('usuario', data.Usuario);
+      localStorage.setItem('nombreUsuario', data.Nombre);  // <--- guardo el nombre completo
 
       // Redirigir según rol
       if (rol === 'admin') {
@@ -59,4 +59,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-

@@ -136,11 +136,11 @@ body {
       background-color: #03A9F4;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
+table:not(#tablaStockMinimo) {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
 
     table th, table td {
       border: 1px solid #444;
@@ -426,3 +426,21 @@ button:hover {
       object-fit: cover;
       border: 3px solid #4FC3F7;
     }
+
+  #stockMinimoContainer {
+  text-align: center;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+
+#tablaStockMinimo {
+  border-collapse: collapse;
+  width: 80%;
+}
+
+#tablaStockMinimo th,
+#tablaStockMinimo td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left; 
+}

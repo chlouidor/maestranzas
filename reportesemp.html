@@ -152,22 +152,27 @@
     </ul>
   </nav>
 
-  <div id="contenido">
-    <h2>Reportes</h2>
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Aquí irán las filas de datos dinámicos -->
-      </tbody>
-    </table>
-  </div>
+  <div id="stockMinimoContainer" style="display:none; margin-top: 2rem;">
+          <h2>Productos Bajo Stock Mínimo</h2>
+            <label>
+              <input type="checkbox" id="toggleStockMinimo" checked /> Mostrar solo productos bajo stock mínimo
+            </label>
+          <table id="tablaStockMinimo" border="1"  margin-top: 1rem;">
+             <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Stock Mínimo</th>
+                <th>Alerta</th>
+              </tr>
+             </thead>
+                <tbody>
+      
+                </tbody>
+          </table>
+      </div>
 
   <footer>
     &copy; 2025 Maestranzas Unidos S.A. - Todos los derechos reservados
@@ -190,6 +195,7 @@
       document.getElementById('nombreUsuario').textContent = `Usuario: ${nombreUsuario}`;
     });
   </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script>
+  <script src="./assets/js/reportes.js"></script>
 </body>
 </html>
