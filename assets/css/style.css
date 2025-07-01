@@ -445,4 +445,13 @@ button:hover {
   text-align: left; 
 }
 
+.registro-container,
+.usuarios-container {
+  max-width: 800px;
+  margin: 20px auto; 
+  background: none;
+  padding: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  border-radius: 5px;
+}
 

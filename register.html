@@ -30,6 +30,9 @@
   <div class="registro-container">
     <h1>Registro de Usuario</h1>
     <form id="registroForm">
+
+      <input type="hidden" id="usuarioId" value="">
+
       <label for="nombre">Nombre completo:</label>
       <input type="text" id="nombre" required>
 
@@ -47,12 +50,33 @@
           <option value="">Seleccionar rol</option>
           <option value="usuario">Usuario</option>
           <option value="admin">Administrador</option>
+          <option value="proveedor">Proveedor</option> <!-- nuevo rol -->
         </select>
+
 
       <button type="submit">Registrarse</button>
       <p id="mensaje"></p>
     </form>
   </div>
+
+  <div class="usuarios-container">
+  <h2>Lista de Usuarios</h2>
+  <table id="tablaUsuarios" border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se insertarán los usuarios -->
+    </tbody>
+  </table>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
 <script src="assets/js/registro.js"></script>
