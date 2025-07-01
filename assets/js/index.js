@@ -39,8 +39,10 @@ const pieza = {
   etiqueta: document.getElementById('etiqueta').value.trim(),
   vencimiento: document.getElementById('vencimiento').value,
   cantidad: parseInt(document.getElementById('cantidad').value),
-  stockmin: 5   
+  precio: parseFloat(document.getElementById('precio').value),
+  stockmin: 5
 };
+
 
   if (new Date(pieza.vencimiento) < new Date().setHours(0, 0, 0, 0)) {
     mensaje.style.color = 'red';
@@ -59,18 +61,22 @@ const pieza = {
     await cargarPiezas();
 
     const piezaInsertada = data[0];
-    const registro = {
-      id_producto: piezaInsertada.id || null,
-      descripcion: piezaInsertada.descripcion,
-      numero_serie: piezaInsertada.numeroSerie,
-      ubicacion: piezaInsertada.ubicacion,
-      etiqueta: piezaInsertada.etiqueta,
-      fecha_vencimiento: piezaInsertada.vencimiento,
-      cantidad: piezaInsertada.cantidad,
-      fecha: new Date().toISOString(),
-      responsable: localStorage.getItem('nombreUsuario') || 'Desconocido',
-      accion: 'agregada'
-    };
+   const registro = {
+  id_producto: piezaInsertada.id || null,
+  descripcion: piezaInsertada.descripcion,
+  numero_serie: piezaInsertada.numeroSerie,
+  ubicacion: piezaInsertada.ubicacion,
+  etiqueta: piezaInsertada.etiqueta,
+  fecha_vencimiento: piezaInsertada.vencimiento,
+  cantidad: piezaInsertada.cantidad,
+  precio: piezaInsertada.precio,
+  precio_anterior: '-', 
+  fecha: new Date().toISOString(),
+  responsable: localStorage.getItem('nombreUsuario') || 'Desconocido',
+  accion: 'agregada'
+};
+
+
 
     await client.from('registros_eliminados').insert([registro]);
   }
@@ -89,20 +95,22 @@ function renderizarTabla(lista = piezas) {
 
     if (dias <= 30) tr.classList.add('destacado');
 
-    tr.innerHTML = `
-      <td>${pieza.id}</td>
-      <td>${pieza.numeroSerie}</td>
-      <td>${pieza.descripcion}</td>
-      <td>${pieza.ubicacion}</td>
-      <td>${pieza.etiqueta}</td>
-      <td>${new Date(pieza.vencimiento).toLocaleDateString()}</td>
-      <td>${pieza.cantidad}</td>
-      <td>
-        <button onclick="verDetalle(${pieza.id})">Ver</button>
-        <button onclick="abrirModalEditar(${pieza.id})">Editar</button>
-        <button class="btn-eliminar" onclick="eliminarPieza(${pieza.id})">Eliminar</button>
-      </td>
-    `;
+   tr.innerHTML = `
+  <td>${pieza.id}</td>
+  <td>${pieza.numeroSerie}</td>
+  <td>${pieza.descripcion}</td>
+  <td>${pieza.ubicacion}</td>
+  <td>${pieza.etiqueta}</td>
+  <td>${new Date(pieza.vencimiento).toLocaleDateString()}</td>
+  <td>${!isNaN(parseFloat(pieza.precio)) ? '$' + parseInt(pieza.precio) : '-'}</td>
+  <td>${pieza.cantidad}</td>
+  <td>
+    <button onclick="verDetalle(${pieza.id})">Ver</button>
+    <button onclick="abrirModalEditar(${pieza.id})">Editar</button>
+    <button class="btn-eliminar" onclick="eliminarPieza(${pieza.id})">Eliminar</button>
+  </td>
+`;
+
 
     tabla.appendChild(tr);
 
@@ -121,8 +129,8 @@ function renderizarTabla(lista = piezas) {
 function verDetalle(id) {
   const pieza = piezas.find(p => p.id === id);
   if (pieza) {
-    alert(`Detalles:\nID: ${pieza.id}\nSerie: ${pieza.numeroSerie}\nDescripción: ${pieza.descripcion}\nUbicación: ${pieza.ubicacion}\nEtiqueta: ${pieza.etiqueta}\nVence: ${new Date(pieza.vencimiento).toLocaleDateString()}\nCantidad: ${pieza.cantidad}`);
-  }
+    alert(`Detalles:\nID: ${pieza.id}\nSerie: ${pieza.numeroSerie}\nDescripción: ${pieza.descripcion}\nUbicación: ${pieza.ubicacion}\nEtiqueta: ${pieza.etiqueta}\nVence: ${new Date(pieza.vencimiento).toLocaleDateString()}\nCantidad: ${pieza.cantidad}\nPrecio: $${pieza.precio.toFixed(2)}`);
+}
 }
 
 function filtrarPorEtiqueta() {
@@ -168,6 +176,8 @@ function abrirModalEditar(id) {
   document.getElementById('editarEtiqueta').value = pieza.etiqueta;
   document.getElementById('editarVencimiento').value = pieza.vencimiento.split('T')[0];
   document.getElementById('editarCantidad').value = pieza.cantidad;
+  document.getElementById('editarPrecio').value = pieza.precio;
+
 
   document.getElementById('modalEditar').style.display = 'flex';
 }
@@ -185,6 +195,8 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
   const nuevaEtiqueta = document.getElementById('editarEtiqueta').value.trim();
   const nuevoVencimiento = document.getElementById('editarVencimiento').value;
   const nuevaCantidad = parseInt(document.getElementById('editarCantidad').value);
+  const nuevoPrecio = parseFloat(document.getElementById('editarPrecio').value);
+
 
   try {
     const { data: datosOriginales, error: errorConsulta } = await client
@@ -199,17 +211,21 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
 
     const responsable = localStorage.getItem('nombreUsuario') || 'Desconocido';
     const registroEdicion = {
-      id_producto: datosOriginales.id,
-      descripcion: datosOriginales.descripcion,
-      numero_serie: datosOriginales.numeroSerie,
-      ubicacion: datosOriginales.ubicacion,
-      etiqueta: datosOriginales.etiqueta,
-      fecha_vencimiento: datosOriginales.vencimiento,
-      cantidad: datosOriginales.cantidad,
-      fecha: new Date().toISOString().split('T')[0],
-      responsable: responsable,
-      accion: 'editada'
-    };
+    id_producto: datosOriginales.id,
+    descripcion: datosOriginales.descripcion,
+    numero_serie: datosOriginales.numeroSerie,
+    ubicacion: datosOriginales.ubicacion,
+    etiqueta: datosOriginales.etiqueta,
+    fecha_vencimiento: datosOriginales.vencimiento,
+    cantidad: datosOriginales.cantidad,
+    precio: nuevoPrecio, 
+    precio_anterior: datosOriginales.precio != null ? datosOriginales.precio.toString() : '-', // el viejo
+    fecha: new Date().toISOString().split('T')[0],
+    responsable: responsable,
+    accion: 'editada'
+};
+
+
 
     const { error: errorHistorial } = await client
       .from('registros_eliminados')
@@ -227,8 +243,10 @@ document.getElementById('formEditar').addEventListener('submit', async (e) => {
         etiqueta: nuevaEtiqueta,
         vencimiento: nuevoVencimiento,
         cantidad: nuevaCantidad,
+        precio: nuevoPrecio,
         stockmin: 5
-      })
+          })
+
       .eq('id', id);
 
     if (error) {
@@ -261,17 +279,20 @@ async function eliminarPieza(id) {
     const responsable = localStorage.getItem('nombreUsuario') || 'Desconocido';
 
     const piezaEliminada = {
-      id_producto: pieza.id,
-      descripcion: pieza.descripcion,
-      numero_serie: pieza.numeroSerie,
-      ubicacion: pieza.ubicacion,
-      etiqueta: pieza.etiqueta,
-      fecha_vencimiento: pieza.vencimiento,
-      cantidad: pieza.cantidad,
-      fecha: fechaActual,
-      responsable: responsable,
-      accion: 'eliminada'
-    };
+  id_producto: pieza.id,
+  descripcion: pieza.descripcion,
+  numero_serie: pieza.numeroSerie,
+  ubicacion: pieza.ubicacion,
+  etiqueta: pieza.etiqueta,
+  fecha_vencimiento: pieza.vencimiento,
+  cantidad: pieza.cantidad,
+  precio: pieza.precio,
+  precio_anterior: pieza.precio != null ? pieza.precio.toString() : '-', 
+  fecha: fechaActual,
+  responsable: responsable,
+  accion: 'eliminada'
+};
+
 
     const { error: insertError } = await client
       .from('registros_eliminados')

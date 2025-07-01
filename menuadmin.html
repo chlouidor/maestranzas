@@ -111,30 +111,85 @@
   </nav>
 
   <main>
-    <h2>Bienvenido, Administrador</h2>
-    <p>Selecciona una opción del menú para comenzar a gestionar el sistema.</p>
-    <div id="notificacionStockBajo" style="display:none; background-color:#ffcc00; color:#333; padding:10px; border-radius:5px; margin-top:1rem; font-weight:bold;">
-  ⚠️ Hay piezas con stock bajo o por vencer. Por favor revisa el inventario.
-  <div id="reportesContenido" style="margin-top:10px; color:#000;"></div>
-</div>
+  <h2>Bienvenido, Administrador</h2>
+  <p>Selecciona una opción del menú para comenzar a gestionar el sistema.</p>
 
-  </main>
+  <div id="notificacionStockBajo" style="display:none; background-color:#a4a4a3; color:#333; padding:10px; border-radius:5px; margin-top:1rem; font-weight:bold;">
+    ⚠️ Hay piezas con stock bajo o por vencer. Por favor revisa el inventario.
+    <div style="margin-top: 10px;">
+      <button id="btnIrReportes"
+              style="padding: 0.5rem 1rem; background-color: #007ACC; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        📊 Revisar reportes
+      </button>
+    </div>
+  </div>
+</main>
+
 
   <footer>
     &copy; 2025 Maestranzas Unidos S.A. - Todos los derechos reservados
   </footer>
 
-  <script>
-    const rol = localStorage.getItem('rol');
-    if (rol !== 'admin') {
-      window.location.href = 'login.html';
+<script>
+  const rol = localStorage.getItem('rol');
+  if (rol !== 'admin') {
+    window.location.href = 'login.html';
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  });
+
+  // Redirigir cuando se hace clic en el botón de revisar reportes
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnIrReportes = document.getElementById('btnIrReportes');
+    if (btnIrReportes) {
+      btnIrReportes.addEventListener('click', () => {
+        window.location.href = 'reportes.html';
+      });
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.clear();
-      window.location.href = 'login.html';
-    });
-  </script>
+
+
+    async function verificarAlertas() {
+      const { data, error } = await client.from('inventario').select('*');
+      if (error || !data) return;
+
+      const hoy = new Date();
+      const en30Dias = new Date();
+      en30Dias.setDate(hoy.getDate() + 30);
+
+      const hayAlerta = data.some(p => {
+        const cantidad = parseInt(p.cantidad);
+        const stockmin = parseInt(p.stockmin);
+        const vencimiento = p.vencimiento ? new Date(p.vencimiento) : null;
+
+        return (
+          (!isNaN(cantidad) && !isNaN(stockmin) && cantidad < stockmin) ||
+          (vencimiento && !isNaN(vencimiento.getTime()) && vencimiento >= hoy && vencimiento <= en30Dias)
+        );
+      });
+
+      if (hayAlerta) {
+        const noti = document.getElementById('notificacionStockBajo');
+        if (noti) {
+          noti.style.opacity = '0';
+          noti.style.display = 'block';
+          noti.style.transition = 'opacity 0.6s ease-in-out';
+          setTimeout(() => {
+            noti.style.opacity = '1';
+          }, 50);
+        }
+      }
+    }
+
+    verificarAlertas();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script>
+
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script> 
 <script src="./assets/js/reportes.js"></script>
 </body>

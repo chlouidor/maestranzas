@@ -21,6 +21,7 @@
           <li><a href="reportes.html">Reportes</a></li>
           <li><a href="configuracion.html">Configuración</a></li>
           <li><a href="register.html" >Registrar Usuario</a></li>
+          <li><a href="gestion.html" >Asignar Piezas</a></li>
         </ul>
       </nav>
     </aside>
@@ -40,6 +41,8 @@
         <th>Cantidad</th> 
         <th>Fecha Modificación</th>
         <th>Responsable</th>
+        <th>Precio Anterior</th>
+        <th>Precio Nuevo</th>
         <th>Acción</th>
       </tr>
     </thead>
@@ -61,7 +64,7 @@
     async function cargarMovimientos() {
   const { data, error } = await client
     .from('registros_eliminados')
-    .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, cantidad, fecha, responsable, accion')
+    .select('id_producto, descripcion, numero_serie, ubicacion, etiqueta, fecha_vencimiento, cantidad, fecha, responsable, accion, precio, precio_anterior')
     .order('fecha', { ascending: false });
 
   if (error) {
@@ -81,17 +84,24 @@
   data.forEach(mov => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${mov["id_producto"]}</td>
-      <td>${mov.descripcion}</td>
-      <td>${mov.numero_serie}</td>
-      <td>${mov.ubicacion}</td>
-      <td>${mov.etiqueta}</td>
-      <td>${new Date(mov.fecha_vencimiento).toLocaleDateString()}</td>
-      <td>${mov.cantidad ?? '-'}</td>
-      <td>${new Date(mov.fecha).toLocaleDateString()}</td>
-      <td>${mov.responsable}</td>
-      <td>${mov.accion || 'N/A'}</td>
-    `;
+<tr>
+  <td>${mov["id_producto"]}</td>
+  <td>${mov.descripcion}</td>
+  <td>${mov.numero_serie}</td>
+  <td>${mov.ubicacion}</td>
+  <td>${mov.etiqueta}</td>
+  <td>${new Date(mov.fecha_vencimiento).toLocaleDateString()}</td>
+  <td>${mov.cantidad ?? '-'}</td>
+  <td>${new Date(mov.fecha).toLocaleDateString()}</td>
+  <td>${mov.responsable}</td>
+  <td>${!isNaN(parseFloat(mov.precio_anterior)) ? '$' + parseInt(mov.precio_anterior) : '-'}</td>
+  <td>${!isNaN(parseFloat(mov.precio)) ? '$' + parseInt(mov.precio) : '-'}</td>
+  <td>${mov.accion || 'N/A'}</td>
+</tr>
+
+
+`;
+
     tbody.appendChild(tr);
   });
 }

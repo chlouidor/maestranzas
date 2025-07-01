@@ -4,19 +4,169 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Asignación de Piezas - Maestranzas Unidos S.A.</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
-</head>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #001c54 0%, #000000 73%);
+      color: #F5F5F5;
+    }
 
+    #navbar {
+      background-color: #005C99;
+      color: white;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    #container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    #sidebar {
+      width: 220px;
+      background-color: #1a1a1a;
+      padding: 1rem;
+    }
+
+    #sidebar nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #sidebar nav ul li {
+      margin: 1rem 0;
+    }
+
+    #sidebar nav ul li a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      display: block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+    }
+
+    #sidebar nav ul li a:hover,
+    #sidebar nav ul li a.active {
+      background-color: #007acc;
+      color: white;
+    }
+
+    #main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    #content-wrapper {
+      display: flex;
+      gap: 2rem;
+    }
+
+    #col-izquierda, #col-derecha {
+      flex: 1;
+    }
+
+    h1, h2 {
+      color: #4FC3F7;
+    }
+
+    form {
+      background-color: #2C2C2C;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #1F1F1F;
+      color: #F5F5F5;
+    }
+
+    form button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #1E1E1E;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background-color: #03A9F4;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table th, table td {
+      border: 1px solid #444;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #333;
+      color: #4FC3F7;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #2A2A2A;
+    }
+
+    #mensajeAsignacion {
+      font-weight: bold;
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      background-color: #4FC3F7;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #1E1E1E;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #03A9F4;
+    }
+  </style>
+</head>
 <body>
   <header id="navbar">
     Maestranzas Unidos S.A. - Asignación de Piezas
   </header>
 
-  <div id="container" style="display:flex;">
-    <aside id="sidebar" style="width:200px;">
+  <div id="container">
+    <aside id="sidebar">
       <nav>
         <ul>
-          <li><a href="menuadmin.html" >Inicio</a></li>
+          <li><a href="menuadmin.html">Inicio</a></li>
           <li><a href="inventario.html">Inventario</a></li>
           <li><a href="movimientos.html">Movimientos</a></li>
           <li><a href="reportes.html">Reportes</a></li>
@@ -27,56 +177,100 @@
       </nav>
     </aside>
 
-    <main id="main" style="flex-grow:1; padding:20px;">
-      <h1>Asignar Piezas a Proyecto/Lote</h1>
+    <main id="main">
+      <div id="content-wrapper">
+        <!-- Columna izquierda (formulario + tabla asignaciones) -->
+        <div id="col-izquierda">
+          <h1>Asignar Piezas</h1>
+          <form id="asignacionForm">
+            <label for="piezaSelect">Seleccione Pieza:</label>
+            <select id="piezaSelect" required>
+              <option value="" disabled selected>-- Seleccione una pieza --</option>
+            </select>
 
-      <form id="asignacionForm">
-        <label for="piezaSelect">Seleccione Pieza (Número de Serie):</label>
-        <select id="piezaSelect" required>
-          <option value="" disabled selected>-- Seleccione una pieza --</option>
-        </select>
+            <label for="cantidadAsignar">Cantidad:</label>
+            <input type="number" id="cantidadAsignar" min="1" value="1" required />
 
-        <label for="cantidadAsignar">Cantidad a asignar:</label>
-        <input type="number" id="cantidadAsignar" min="1" value="1" required />
+            <label for="proyecto">Proyecto o Lote:</label>
+            <input type="text" id="proyecto" placeholder="Ingrese proyecto" required />
 
-        <label for="proyecto">Proyecto o Lote:</label>
-        <input type="text" id="proyecto" placeholder="Ingrese proyecto o lote" required />
+            <label for="fase">Fase:</label>
+            <select id="fase" required>
+              <option value="" disabled selected>-- Seleccione fase --</option>
+              <option value="Recepción">Recepción</option>
+              <option value="Montaje">Montaje</option>
+              <option value="Pruebas">Pruebas</option>
+              <option value="Entrega">Entrega</option>
+            </select>
 
-        <label for="fase">Fase o Etapa:</label>
-        <select id="fase" required>
-          <option value="" disabled selected>-- Seleccione fase --</option>
-          <option value="Recepción">Recepción</option>
-          <option value="Montaje">Montaje</option>
-          <option value="Pruebas">Pruebas</option>
-          <option value="Entrega">Entrega</option>
-        </select>
+            <button type="submit">Confirmar Asignación</button>
+            <button type="button" id="btnDeshacer">Deshacer Última</button>
+          </form>
 
-        <button type="submit">Confirmar Asignación</button>
-        <button type="button" id="btnDeshacer">Deshacer Última Asignación</button>
-      </form>
+          <p id="mensajeAsignacion" style="color:red;"></p>
 
-      <p id="mensajeAsignacion" style="color:red;"></p>
+          <h2>Asignaciones Actuales</h2>
+          <table id="tablaAsignaciones">
+            <thead>
+              <tr>
+                <th>Número de Serie</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Proyecto</th>
+                <th>Fase</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoAsignaciones"></tbody>
+          </table>
+        </div>
 
-      <h2>Asignaciones Actuales</h2>
-      <table id="tablaAsignaciones">
-        <thead>
-          <tr>
-            <th>Número de Serie</th>
-            <th>Descripción</th>
-            <th>Cantidad asignada</th>
-            <th>Proyecto/Lote</th>
-            <th>Fase/Etapa</th>
-            <th>Fecha asignación</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpoAsignaciones"></tbody>
-      </table>
+        <!-- Columna derecha (informes) -->
+        <div id="col-derecha">
+          <h2>Módulo de Informes</h2>
+          <form id="formularioInforme">
+            <label for="filtroProyecto">Filtrar por proyecto:</label>
+            <select id="filtroProyecto">
+              <option value="">-- Todos --</option>
+            </select>
 
+            <label for="fechaInicio">Fecha inicio:</label>
+            <input type="date" id="fechaInicio" />
+
+            <label for="fechaFin">Fecha fin:</label>
+            <input type="date" id="fechaFin" />
+
+            <button type="button" id="btnFiltrar">Filtrar</button>
+          </form>
+
+          <div style="margin-top: 1rem;">
+            <button id="exportarPDF">📄 Exportar PDF</button>
+            <button id="exportarExcel">📊 Exportar Excel</button>
+          </div>
+
+          <table id="tablaInformes" style="margin-top: 1rem;">
+            <thead>
+              <tr>
+                <th>Número de Serie</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Proyecto</th>
+                <th>Fase</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoInformes"></tbody>
+          </table>
+        </div>
+      </div>
     </main>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
-<script src="assets/js/gestion.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+  <script src="assets/js/gestion.js"></script>
 </body>
 </html>
